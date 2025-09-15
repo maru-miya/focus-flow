@@ -35,6 +35,23 @@ class FocusFlowTimer {
         this.bindEvents();
         this.updateTimerFromSettings();
         this.updateSwitchModeButton();
+        this.updateTimerClickability();
+    }
+
+    toggleTimer() {
+        if (this.isRunning) {
+            this.pause();
+        } else if (this.isPaused || this.timeRemaining > 0) {
+            this.start();
+        }
+    }
+
+    updateTimerClickability() {
+        if (this.isRunning || this.isPaused || this.timeRemaining > 0) {
+            this.elements.timerDisplay.classList.add('clickable');
+        } else {
+            this.elements.timerDisplay.classList.remove('clickable');
+        }
     }
 
     bindEvents() {
@@ -43,16 +60,113 @@ class FocusFlowTimer {
         this.elements.resetBtn.addEventListener('click', () => this.reset());
         this.elements.switchModeBtn.addEventListener('click', () => this.switchMode());
 
+        // タイマー表示部分をクリックして再開・一時停止
+        this.elements.timerDisplay.addEventListener('click', () => this.toggleTimer());
+
         // 設定変更時の処理
         [this.elements.workHours, this.elements.workMinutes, this.elements.workSeconds,
          this.elements.breakHours, this.elements.breakMinutes, this.elements.breakSeconds].forEach(input => {
             input.addEventListener('change', () => {
-                this.saveSettings();
-                if (!this.isRunning) {
-                    this.updateTimerFromSettings();
-                }
+                this.handleInputChange(input);
+            });
+
+            input.addEventListener('blur', () => {
+                this.handleInputBlur(input);
             });
         });
+
+        // スクロールイベントの処理
+        this.bindScrollEvents();
+    }
+
+    bindScrollEvents() {
+        const timeInputs = [
+            this.elements.workHours,
+            this.elements.workMinutes,
+            this.elements.workSeconds,
+            this.elements.breakHours,
+            this.elements.breakMinutes,
+            this.elements.breakSeconds
+        ];
+
+        timeInputs.forEach(input => {
+            input.addEventListener('wheel', (e) => {
+                e.preventDefault();
+
+                const isHours = input.id.includes('Hours');
+                const maxValue = isHours ? 23 : 59;
+                const currentValue = parseInt(input.value) || 0;
+
+                let newValue;
+                if (e.deltaY < 0) {
+                    // 上スクロール（値を増加）
+                    newValue = Math.min(currentValue + 1, maxValue);
+                } else {
+                    // 下スクロール（値を減少）
+                    newValue = Math.max(currentValue - 1, 0);
+                }
+
+                input.value = newValue;
+
+                // 設定を保存し、タイマーが停止中の場合は表示を更新
+                this.handleInputChange(input);
+            });
+
+            // タッチデバイス用のスクロール処理
+            let touchStartY = 0;
+            let touchMoveY = 0;
+
+            input.addEventListener('touchstart', (e) => {
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+
+            input.addEventListener('touchmove', (e) => {
+                touchMoveY = e.touches[0].clientY;
+            }, { passive: true });
+
+            input.addEventListener('touchend', (e) => {
+                const deltaY = touchStartY - touchMoveY;
+                const threshold = 20; // スクロール感度の閾値
+
+                if (Math.abs(deltaY) > threshold) {
+                    const isHours = input.id.includes('Hours');
+                    const maxValue = isHours ? 23 : 59;
+                    const currentValue = parseInt(input.value) || 0;
+
+                    let newValue;
+                    if (deltaY > 0) {
+                        // 上スワイプ（値を増加）
+                        newValue = Math.min(currentValue + 1, maxValue);
+                    } else {
+                        // 下スワイプ（値を減少）
+                        newValue = Math.max(currentValue - 1, 0);
+                    }
+
+                    input.value = newValue;
+
+                    // 設定を保存し、タイマーが停止中の場合は表示を更新
+                    this.handleInputChange(input);
+                }
+            }, { passive: true });
+        });
+    }
+
+    handleInputChange(input) {
+        this.saveSettings();
+        if (!this.isRunning) {
+            this.updateTimerFromSettings();
+        }
+    }
+
+    handleInputBlur(input) {
+        // 入力欄がフォーカスを失った時に空白なら0を表示
+        if (input.value === '' || input.value === null || input.value === undefined) {
+            input.value = '0';
+            this.saveSettings();
+            if (!this.isRunning) {
+                this.updateTimerFromSettings();
+            }
+        }
     }
 
     updateTimerFromSettings() {
@@ -65,15 +179,15 @@ class FocusFlowTimer {
     }
 
     getWorkTimeInSeconds() {
-        return parseInt(this.elements.workHours.value) * 3600 +
-               parseInt(this.elements.workMinutes.value) * 60 +
-               parseInt(this.elements.workSeconds.value);
+        return (parseInt(this.elements.workHours.value) || 0) * 3600 +
+               (parseInt(this.elements.workMinutes.value) || 0) * 60 +
+               (parseInt(this.elements.workSeconds.value) || 0);
     }
 
     getBreakTimeInSeconds() {
-        return parseInt(this.elements.breakHours.value) * 3600 +
-               parseInt(this.elements.breakMinutes.value) * 60 +
-               parseInt(this.elements.breakSeconds.value);
+        return (parseInt(this.elements.breakHours.value) || 0) * 3600 +
+               (parseInt(this.elements.breakMinutes.value) || 0) * 60 +
+               (parseInt(this.elements.breakSeconds.value) || 0);
     }
 
     start() {
@@ -89,6 +203,7 @@ class FocusFlowTimer {
         this.elements.pauseBtn.style.display = 'inline-block';
         this.elements.switchModeBtn.style.display = 'none';
         this.elements.timerDisplay.classList.add('running');
+        this.updateTimerClickability();
 
         this.interval = setInterval(() => {
             this.tick();
@@ -107,6 +222,7 @@ class FocusFlowTimer {
         this.elements.pauseBtn.style.display = 'none';
         this.elements.timerDisplay.classList.remove('running');
         this.updateSwitchModeButton();
+        this.updateTimerClickability();
     }
 
     reset() {
@@ -125,6 +241,7 @@ class FocusFlowTimer {
 
         // リセット時にもモード切り替えボタンを表示
         this.updateSwitchModeButton();
+        this.updateTimerClickability();
     }
 
     tick() {
@@ -159,6 +276,7 @@ class FocusFlowTimer {
         this.elements.switchModeBtn.textContent = `${nextMode}に切り替え`;
 
         this.updateDisplayFromTime(0);
+        this.updateTimerClickability();
     }
 
     switchMode() {
@@ -176,6 +294,7 @@ class FocusFlowTimer {
         } else {
             this.elements.switchModeBtn.style.display = 'none';
         }
+        this.updateTimerClickability();
     }
 
     updateModeDisplay() {

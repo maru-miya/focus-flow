@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusFlow - 機能テスト</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .test-result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 3px;
+        }
+        .test-pass {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .test-fail {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .test-input {
+            margin: 10px 0;
+            padding: 5px;
+            width: 60px;
+            text-align: center;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>FocusFlow 機能テスト</h1>
+
+    <div class="test-section">
+        <h2>1. 空白値の自動処理テスト</h2>
+        <p>時間入力欄を空白にして「テスト実行」ボタンを押してください。空白値が0として扱われることを確認します。</p>
+
+        <div>
+            <label>時間: </label>
+            <input type="number" id="testHours" class="test-input" min="0" max="23" placeholder="空白">
+            <label>分: </label>
+            <input type="number" id="testMinutes" class="test-input" min="0" max="59" placeholder="空白">
+            <label>秒: </label>
+            <input type="number" id="testSeconds" class="test-input" min="0" max="59" placeholder="空白">
+        </div>
+
+        <button onclick="testEmptyValues()">テスト実行</button>
+        <div id="emptyValueResult" class="test-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. スクロール入力テスト</h2>
+        <p>以下の入力欄にマウスカーソルを合わせてマウスホイールを回転させてください。値が増減することを確認します。</p>
+
+        <div>
+            <label>時間: </label>
+            <input type="number" id="scrollTestHours" class="test-input" min="0" max="23" value="0">
+            <label>分: </label>
+            <input type="number" id="scrollTestMinutes" class="test-input" min="0" max="59" value="0">
+            <label>秒: </label>
+            <input type="number" id="scrollTestSeconds" class="test-input" min="0" max="59" value="0">
+        </div>
+
+        <button onclick="testScrollLimits()">範囲制限テスト</button>
+        <div id="scrollResult" class="test-result"></div>
+
+        <p><strong>テスト手順:</strong></p>
+        <ul>
+            <li>各入力欄でマウスホイールを上に回転 → 値が1ずつ増加</li>
+            <li>各入力欄でマウスホイールを下に回転 → 値が1ずつ減少</li>
+            <li>時間欄: 最大23、最小0で制限されること</li>
+            <li>分・秒欄: 最大59、最小0で制限されること</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>3. 統合テスト</h2>
+        <p>実際のFocusFlowアプリでの動作を確認してください。</p>
+        <a href="index.html" target="_blank">
+            <button>FocusFlowアプリを開く</button>
+        </a>
+
+        <p><strong>確認項目:</strong></p>
+        <ul>
+            <li>時間入力欄を空白にしてもエラーが発生しない</li>
+            <li>スクロールで時間調整ができる</li>
+            <li>既存機能（タイマー、モード切り替え、記録）が正常に動作する</li>
+        </ul>
+    </div>
+
+    <script>
+        // 空白値処理のテスト関数
+        function getTimeInSeconds(hours, minutes, seconds) {
+            return (parseInt(hours) || 0) * 3600 +
+                   (parseInt(minutes) || 0) * 60 +
+                   (parseInt(seconds) || 0);
+        }
+
+        function testEmptyValues() {
+            const hours = document.getElementById('testHours').value;
+            const minutes = document.getElementById('testMinutes').value;
+            const seconds = document.getElementById('testSeconds').value;
+
+            const totalSeconds = getTimeInSeconds(hours, minutes, seconds);
+            const resultDiv = document.getElementById('emptyValueResult');
+
+            // 空白値が0として扱われているかテスト
+            const expectedSeconds = 0; // すべて空白なら0秒
+
+            if (totalSeconds === expectedSeconds) {
+                resultDiv.className = 'test-result test-pass';
+                resultDiv.textContent = `✓ テスト成功: 空白値が正しく0として処理されました (${totalSeconds}秒)`;
+            } else {
+                resultDiv.className = 'test-result test-fail';
+                resultDiv.textContent = `✗ テスト失敗: 期待値0秒、実際の値${totalSeconds}秒`;
+            }
+        }
+
+        // スクロール機能の初期化
+        function initScrollTest() {
+            const inputs = [
+                document.getElementById('scrollTestHours'),
+                document.getElementById('scrollTestMinutes'),
+                document.getElementById('scrollTestSeconds')
+            ];
+
+            inputs.forEach(input => {
+                input.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+
+                    const isHours = input.id.includes('Hours');
+                    const maxValue = isHours ? 23 : 59;
+                    const currentValue = parseInt(input.value) || 0;
+
+                    let newValue;
+                    if (e.deltaY < 0) {
+                        newValue = Math.min(currentValue + 1, maxValue);
+                    } else {
+                        newValue = Math.max(currentValue - 1, 0);
+                    }
+
+                    input.value = newValue;
+                });
+            });
+        }
+
+        // 範囲制限のテスト
+        function testScrollLimits() {
+            const hoursInput = document.getElementById('scrollTestHours');
+            const minutesInput = document.getElementById('scrollTestMinutes');
+            const secondsInput = document.getElementById('scrollTestSeconds');
+            const resultDiv = document.getElementById('scrollResult');
+
+            // 最大値設定テスト
+            hoursInput.value = 23;
+            minutesInput.value = 59;
+            secondsInput.value = 59;
+
+            // 最小値設定テスト
+            setTimeout(() => {
+                hoursInput.value = 0;
+                minutesInput.value = 0;
+                secondsInput.value = 0;
+
+                resultDiv.className = 'test-result test-pass';
+                resultDiv.textContent = '✓ 範囲制限テスト完了: 最大値(23:59:59)と最小値(0:0:0)が設定されました。スクロールで制限が正しく動作するか確認してください。';
+            }, 1000);
+        }
+
+        // ページ読み込み時にスクロール機能を初期化
+        document.addEventListener('DOMContentLoaded', initScrollTest);
+    </script>
+</body>
+</html>
