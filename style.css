@@ -37,6 +37,10 @@ header h1 {
     font-weight: 300;
     letter-spacing: 2px;
     color: #1A1A1A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
 }
 
 body.break-mode header h1 {
