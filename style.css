@@ -7,19 +7,19 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+    background: #F8F9FA;
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #2d3436;
+    color: #1A1A1A;
     transition: background 0.5s ease;
 }
 
 /* 休憩モード時の背景 */
 body.break-mode {
-    background: linear-gradient(135deg, #1e3a5f 0%, #5a7c8a 100%);
-    color: white;
+    background: #E3F2FD;
+    color: #1A1A1A;
 }
 
 .container {
@@ -36,27 +36,26 @@ header h1 {
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     font-weight: 300;
     letter-spacing: 2px;
-    color: #2d3436;
+    color: #1A1A1A;
 }
 
 body.break-mode header h1 {
-    color: white;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    color: #1A1A1A;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* 時間設定セクション */
 .time-settings {
-    background: rgba(255, 255, 255, 0.6);
+    background: #FFFFFF;
     border-radius: 15px;
     padding: 1.5rem;
     margin-bottom: 2rem;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 25px rgba(0, 122, 255, 0.1);
 }
 
 body.break-mode .time-settings {
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    background: #FFFFFF;
+    box-shadow: 0 8px 25px rgba(0, 122, 255, 0.1);
 }
 
 .setting-group {
@@ -72,11 +71,11 @@ body.break-mode .time-settings {
     margin-bottom: 0.5rem;
     font-weight: 500;
     font-size: 0.9rem;
-    color: #2d3436;
+    color: #1A1A1A;
 }
 
 body.break-mode .setting-group label {
-    color: rgba(255, 255, 255, 0.9);
+    color: #1A1A1A;
 }
 
 .time-inputs {
@@ -91,8 +90,8 @@ body.break-mode .setting-group label {
     padding: 0.5rem;
     border: none;
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.9);
-    color: #333;
+    background: #FFFFFF;
+    color: #1A1A1A;
     text-align: center;
     font-size: 1rem;
     font-weight: 600;
@@ -100,53 +99,52 @@ body.break-mode .setting-group label {
 
 .time-inputs input:focus {
     outline: none;
-    box-shadow: 0 0 0 2px rgba(253, 203, 110, 0.5);
+    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.5);
 }
 
 body.break-mode .time-inputs input:focus {
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.5);
 }
 
 .time-inputs span {
     font-size: 1.2rem;
     font-weight: bold;
-    color: #636e72;
+    color: #6C757D;
 }
 
 body.break-mode .time-inputs span {
-    color: rgba(255, 255, 255, 0.8);
+    color: #6C757D;
 }
 
 /* タイマーセクション */
 .timer-section {
-    background: rgba(255, 255, 255, 0.6);
+    background: #FFFFFF;
     border-radius: 20px;
     padding: 2rem;
     margin-bottom: 2rem;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 12px 35px rgba(0, 122, 255, 0.1);
 }
 
 body.break-mode .timer-section {
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+    background: #FFFFFF;
+    box-shadow: 0 12px 35px rgba(0, 122, 255, 0.1);
 }
 
 .mode-indicator {
     font-size: 1.2rem;
     margin-bottom: 1rem;
     padding: 0.5rem 1rem;
-    background: rgba(253, 203, 110, 0.4);
+    background: rgba(0, 122, 255, 0.1);
     border-radius: 25px;
     display: inline-block;
     font-weight: 600;
     letter-spacing: 1px;
-    color: #2d3436;
+    color: #007AFF;
 }
 
 body.break-mode .mode-indicator {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
+    background: rgba(90, 200, 250, 0.2);
+    color: #5AC8FA;
 }
 
 .timer-display {
@@ -158,46 +156,45 @@ body.break-mode .mode-indicator {
     letter-spacing: 3px;
     transition: all 0.3s ease;
     user-select: none;
-    color: #2d3436;
+    color: #1A1A1A;
 }
 
 body.break-mode .timer-display {
-    color: white;
-    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    color: #1A1A1A;
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .timer-display.clickable {
     cursor: pointer;
-    background: rgba(255, 255, 255, 0.4);
+    background: rgba(0, 122, 255, 0.05);
     border-radius: 20px;
     padding: 1rem 2rem;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(5px);
+    box-shadow: 0 8px 25px rgba(0, 122, 255, 0.1);
 }
 
 body.break-mode .timer-display.clickable {
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    background: rgba(90, 200, 250, 0.1);
+    box-shadow: 0 8px 25px rgba(0, 122, 255, 0.1);
 }
 
 .timer-display.clickable:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-    background: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 15px 40px rgba(0, 122, 255, 0.15);
+    background: rgba(0, 122, 255, 0.1);
 }
 
 body.break-mode .timer-display.clickable:hover {
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 15px 40px rgba(0, 122, 255, 0.15);
+    background: rgba(90, 200, 250, 0.15);
 }
 
 .timer-display.clickable:active {
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 30px rgba(0, 122, 255, 0.2);
 }
 
 body.break-mode .timer-display.clickable:active {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 10px 30px rgba(0, 122, 255, 0.2);
 }
 
 /* コントロールボタン */
@@ -216,21 +213,21 @@ body.break-mode .timer-display.clickable:active {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 122, 255, 0.1);
     min-width: 100px;
 }
 
 body.break-mode .btn {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 122, 255, 0.1);
 }
 
 .btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 20px rgba(0, 122, 255, 0.15);
 }
 
 body.break-mode .btn:hover {
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 6px 20px rgba(0, 122, 255, 0.15);
 }
 
 .btn:active {
@@ -238,54 +235,53 @@ body.break-mode .btn:hover {
 }
 
 .btn.primary {
-    background: linear-gradient(135deg, #e17055, #d63031);
+    background: #007AFF;
     color: white;
 }
 
 .btn.primary:hover {
-    background: linear-gradient(135deg, #d63031, #c0392b);
+    background: #0051D5;
 }
 
 .btn.secondary {
-    background: rgba(255, 255, 255, 0.9);
-    color: #2d3436;
+    background: #FFFFFF;
+    color: #1A1A1A;
 }
 
 .btn.secondary:hover {
-    background: rgba(255, 255, 255, 1);
+    background: #F8F9FA;
 }
 
 .btn.accent {
-    background: linear-gradient(135deg, #fdcb6e, #e17055);
+    background: #5AC8FA;
     color: white;
 }
 
 .btn.accent:hover {
-    background: linear-gradient(135deg, #e17055, #d63031);
+    background: #007AFF;
 }
 
 /* 統計セクション */
 .stats-section {
-    background: rgba(255, 255, 255, 0.6);
+    background: #FFFFFF;
     border-radius: 15px;
     padding: 1rem;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 25px rgba(0, 122, 255, 0.1);
 }
 
 body.break-mode .stats-section {
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    background: #FFFFFF;
+    box-shadow: 0 8px 25px rgba(0, 122, 255, 0.1);
 }
 
 .daily-stats {
     font-size: 1.1rem;
     font-weight: 500;
-    color: #2d3436;
+    color: #1A1A1A;
 }
 
 body.break-mode .daily-stats {
-    color: rgba(255, 255, 255, 0.9);
+    color: #1A1A1A;
 }
 
 /* レスポンシブデザイン */
